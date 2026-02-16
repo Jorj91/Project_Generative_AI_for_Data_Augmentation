@@ -1,0 +1,11 @@
+torch
+torchvision
+transformers
+diffusers
+accelerate
+sentencepiece
+scikit-learn
+matplotlib
+numpy
+pillow
+tqdm

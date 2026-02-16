@@ -1,0 +1,7 @@
+data/raw/
+data/synthetic/
+models/
+__pycache__/
+*.pth
+*.pt
+*.log
