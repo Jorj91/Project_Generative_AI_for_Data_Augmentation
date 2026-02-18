@@ -2,39 +2,39 @@
     "0": {
         "class_name": "Pomeranian",
         "original_captions": [
-            "a pomeranian dog my dog is sitting on the bed",
-            "a pomeranian dog this dog is sitting on the bed"
+            "a pomeranian dog this dog is sitting on the bed",
+            "a pomeranian dog my dog is sitting on the bed"
         ],
         "generated_captions": [
-            "On the bed sits a Pomeranian dog.",
-            "The Pomeranian breed of dog is occupying the bed where I am sitting.",
+            "",
             "My Pomeranian dog is seated on the bed.",
-            "A Pomeranian can be seen sitting on the bed."
+            "The Pomeranian breed of dog is occupying the bed where I am sitting."
         ]
     },
     "1": {
         "class_name": "Havanese",
         "original_captions": [
-            "a havanese dog is sitting on a tennis court",
-            "a havanese dog is sitting on the tennis court"
+            "a havanese dog is sitting on the tennis court",
+            "a havanese dog is sitting on a tennis court"
         ],
         "generated_captions": [
-            "A Havanese dog is seated on a tennis court.",
+            "The Havanese dog is resting on the tennis court.",
             "A Havanese dog is positioned on a tennis court.",
-            "The Havanese dog is resting on a tennis court."
+            "A Havanese dog is seated on a tennis court.",
+            "A Havanese dog is seated on the tennis court."
         ]
     },
     "2": {
         "class_name": "British Shorthair",
         "original_captions": [
-            "a british shorthair cat is sitting in a box",
-            "a british shorthair cat is sitting in a cardboard box"
+            "a british shorthair cat is sitting in a cardboard box",
+            "a british shorthair cat is sitting in a box"
         ],
         "generated_captions": [
-            "A British Shorthair cat is contained in a box.",
-            "In a cardboard box, there is a seated British Shorthair cat.",
-            "A British Shorthair feline is seated inside a box.",
-            "A British Shorthair feline is occupying a cardboard container."
+            "In a box sits a British Shorthair feline.",
+            "A British Shorthair cat is occupying a cardboard container.",
+            "In a cardboard box resides a British Shorthair feline.",
+            "A British Shorthair cat is positioned inside a box."
         ]
     },
     "3": {
@@ -44,10 +44,9 @@
             "a samoyed dog is sitting on the ground with his tongue out"
         ],
         "generated_captions": [
-            "A Samoyed canine is lying on the ground with its tongue extended.",
-            "The Samoyed breed of dog gazes into the lens of the camera.",
-            "The Samoyed breed of dog is positioned on the ground, showing its tongue.",
-            "The Samoyed dog directs its attention towards the photographic device."
+            "",
+            "A Samoyed canine is resting on the ground with its tongue extended.",
+            "A Samoyed breed of dog is found on the ground, showing its tongue."
         ]
     },
     "4": {
@@ -56,7 +55,7 @@
             "a siamese cat sitting on a bed"
         ],
         "generated_captions": [
-            "A Siamese cat posed on a bedcover",
+            "A Siamese cat resting on a bedcover",
             "A Siamese feline perched on a mattress"
         ]
     },
@@ -66,21 +65,21 @@
             "a keeshond dog is standing on the grass"
         ],
         "generated_captions": [
-            "A Keeshond breed of dog is positioned on the blade of grass.",
-            "A Keeshond canine is situated on the lawn."
+            "The grassy landscape has a Keeshond dog standing on it.",
+            "A Keeshond breed of dog is positioned on the blade of grass."
         ]
     },
     "6": {
         "class_name": "Chihuahua",
         "original_captions": [
-            "a chihuahua dog is a small dog with a long body and short legs",
-            "a chihuahua dog is a small dog with a short body and a long tail"
+            "a chihuahua dog is a small dog with a short body and a long tail",
+            "a chihuahua dog is a small dog with a long body and short legs"
         ],
         "generated_captions": [
-            "A Chihuahua is a tiny breed of dog characterized by a compact body and an extended tail.",
-            "The Chihuahua is a small canine",
-            "The Chihuahua is a miniature canine",
-            "A Chihuahua is a small breed of dog characterized by its elongated body and short legs."
+            "A Chihuahua is a small breed of dog characterized by a compact body and an extended tail.",
+            "A Chihuahua is a little dog with a",
+            "A Chihuahua is a small canine",
+            "A Chihuahua is a small breed of dog characterized by a long torso and short limbs."
         ]
     },
     "7": {
@@ -89,19 +88,19 @@
             "a saint bernard dog is standing in the snow"
         ],
         "generated_captions": [
-            "In the snow, a Saint Bernard dog is depicted.",
-            "A Saint Bernard dog poses in the snowy landscape."
+            "A Saint Bernard dog is shown standing amidst the snowfall.",
+            "In the snowy landscape, a Saint Bernard dog poses."
         ]
     },
     "8": {
         "class_name": "Havanese",
         "original_captions": [
-            "a havanese dog is sitting on the steps",
-            "a havanese dog is standing on a wooden staircase"
+            "a havanese dog is standing on a wooden staircase",
+            "a havanese dog is sitting on the steps"
         ],
         "generated_captions": [
             "A Havanese dog is positioned on a wooden staircase.",
-            "The Havanese dog is situated atop a wooden staircase.",
+            "The Havanese dog is stationed on a wooden staircase.",
             "The Havanese dog is seated on the staircase.",
             "A Havanese dog is perched on the steps."
         ]
@@ -109,14 +108,14 @@
     "9": {
         "class_name": "Persian",
         "original_captions": [
-            "a persian cat is looking at the camera with an angry expression",
-            "a persian cat is looking angry"
+            "a persian cat is looking angry",
+            "a persian cat is looking at the camera with an angry expression"
         ],
         "generated_captions": [
-            "The Persian cat seems displeased or irritated.",
-            "A Persian cat is displaying an angry expression.",
-            "A Persian cat is giving the camera a displeased gaze.",
-            "The Persian cat's expression towards the camera is one of annoyance."
+            "A Persian cat displays an irritated expression.",
+            "A Persian cat appears to be in a displeased mood.",
+            "A Persian cat is glaring at the camera with a fierce and displeased countenance.",
+            "The Persian cat's face, full of indignation"
         ]
     }
 }
