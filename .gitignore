@@ -5,3 +5,8 @@ __pycache__/
 *.pth
 *.pt
 *.log
+*.pyc
+.ipynb_checkpoints/
+data/text_variations/
+venv/
+venv312/
