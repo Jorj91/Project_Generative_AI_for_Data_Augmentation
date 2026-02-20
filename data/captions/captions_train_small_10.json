@@ -1,0 +1,72 @@
+{
+  "3037": {
+    "class_name": "Pomeranian",
+    "captions": [
+      "a pomeranian dog this dog is sitting on the bed",
+      "a pomeranian dog my dog is sitting on the bed"
+    ]
+  },
+  "2635": {
+    "class_name": "Havanese",
+    "captions": [
+      "a havanese dog is sitting on a tennis court",
+      "a havanese dog is sitting on the tennis court"
+    ]
+  },
+  "498": {
+    "class_name": "British Shorthair",
+    "captions": [
+      "a british shorthair cat is sitting in a cardboard box",
+      "a british shorthair cat is sitting in a box"
+    ]
+  },
+  "1449": {
+    "class_name": "Samoyed",
+    "captions": [
+      "a samoyed dog is sitting on the ground with his tongue out",
+      "a samoyed dog is looking at the camera"
+    ]
+  },
+  "1602": {
+    "class_name": "Siamese",
+    "captions": [
+      "a siamese cat sitting on a bed",
+      "a siamese cat sitting on a bed"
+    ]
+  },
+  "2767": {
+    "class_name": "Keeshond",
+    "captions": [
+      "a keeshond dog is standing on the grass",
+      "a keeshond dog is standing on the grass"
+    ]
+  },
+  "2353": {
+    "class_name": "Chihuahua",
+    "captions": [
+      "a chihuahua dog is a small dog with a long body and short legs",
+      "a chihuahua dog is a small dog with a short body and a long tail"
+    ]
+  },
+  "1403": {
+    "class_name": "Saint Bernard",
+    "captions": [
+      "a saint bernard dog is standing in the snow",
+      "a saint bernard dog is standing in the snow"
+    ]
+  },
+  "796": {
+    "class_name": "Havanese",
+    "captions": [
+      "a havanese dog is standing on a wooden staircase",
+      "a havanese dog is sitting on the steps"
+    ]
+  },
+  "2999": {
+    "class_name": "Persian",
+    "captions": [
+      "a persian cat is looking at the camera with an angry expression",
+      "a persian cat is looking angry"
+    ]
+  }
+}
