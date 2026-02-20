@@ -1,0 +1,142 @@
+{
+    "3037": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/3037_0.png",
+            "class_name": "Pomeranian",
+            "prompt": "A high-resolution realistic photograph of a Pomeranian, the pomeranian dog i own is resting on the bed.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/3037_1.png",
+            "class_name": "Pomeranian",
+            "prompt": "A high-resolution realistic photograph of a Pomeranian, my pomeranian dog is seated on the bed.",
+            "source": "synthetic"
+        }
+    ],
+    "2635": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2635_0.png",
+            "class_name": "Havanese",
+            "prompt": "A high-resolution realistic photograph of a Havanese, the havanese dog is resting on a tennis court.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2635_1.png",
+            "class_name": "Havanese",
+            "prompt": "A high-resolution realistic photograph of a Havanese, a havanese dog is positioned on a tennis court.",
+            "source": "synthetic"
+        }
+    ],
+    "498": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/498_0.png",
+            "class_name": "British Shorthair",
+            "prompt": "A high-resolution realistic photograph of a British Shorthair, a british shorthair cat is occupying a cardboard container.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/498_1.png",
+            "class_name": "British Shorthair",
+            "prompt": "A high-resolution realistic photograph of a British Shorthair, in a box, there is a british shorthair cat resting.",
+            "source": "synthetic"
+        }
+    ],
+    "1449": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1449_0.png",
+            "class_name": "Samoyed",
+            "prompt": "A high-resolution realistic photograph of a Samoyed, the samoyed breed of dog is positioned on the ground, displaying a tongue extended",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1449_1.png",
+            "class_name": "Samoyed",
+            "prompt": "A high-resolution realistic photograph of a Samoyed, the samoyed dog is gazing directly at the camera.",
+            "source": "synthetic"
+        }
+    ],
+    "1602": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1602_0.png",
+            "class_name": "Siamese",
+            "prompt": "A high-resolution realistic photograph of a Siamese, a siamese feline perched on a mattress",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1602_1.png",
+            "class_name": "Siamese",
+            "prompt": "A high-resolution realistic photograph of a Siamese, a bed is home to a siamese cat",
+            "source": "synthetic"
+        }
+    ],
+    "2767": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2767_0.png",
+            "class_name": "Keeshond",
+            "prompt": "A high-resolution realistic photograph of a Keeshond, a keeshond breed of dog is positioned on the blade of grass.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2767_1.png",
+            "class_name": "Keeshond",
+            "prompt": "A high-resolution realistic photograph of a Keeshond, a keeshond canine is situated on the verdant lawn.",
+            "source": "synthetic"
+        }
+    ],
+    "2353": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2353_0.png",
+            "class_name": "Chihuahua",
+            "prompt": "A high-resolution realistic photograph of a Chihuahua, 2) the chihuahua is a small canine",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2353_1.png",
+            "class_name": "Chihuahua",
+            "prompt": "A high-resolution realistic photograph of a Chihuahua, a chihuahua is a small breed of dog characterized by a long torso and short legs.",
+            "source": "synthetic"
+        }
+    ],
+    "1403": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1403_0.png",
+            "class_name": "Saint Bernard",
+            "prompt": "A high-resolution realistic photograph of a Saint Bernard, amidst the snowfall, a saint bernard dog remains steadfast.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/1403_1.png",
+            "class_name": "Saint Bernard",
+            "prompt": "A high-resolution realistic photograph of a Saint Bernard, in the snowy weather, a saint bernard dog poses.",
+            "source": "synthetic"
+        }
+    ],
+    "796": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/796_0.png",
+            "class_name": "Havanese",
+            "prompt": "A high-resolution realistic photograph of a Havanese, a havanese dog is perched on the steps.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/796_1.png",
+            "class_name": "Havanese",
+            "prompt": "A high-resolution realistic photograph of a Havanese, the havanese dog is seated on the staircase.",
+            "source": "synthetic"
+        }
+    ],
+    "2999": [
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2999_0.png",
+            "class_name": "Persian",
+            "prompt": "A high-resolution realistic photograph of a Persian, a persian cat exhibits a fierce and displeased expression.",
+            "source": "synthetic"
+        },
+        {
+            "image_path": "/content/Project_Generative_AI_for_Data_Augmentation/data/synthetic/images/2999_1.png",
+            "class_name": "Persian",
+            "prompt": "A high-resolution realistic photograph of a Persian, a persian cat glares at the camera with a furious countenance.",
+            "source": "synthetic"
+        }
+    ]
+}
