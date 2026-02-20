@@ -156,7 +156,10 @@ class SyntheticImageGenerator:
                             "source": "synthetic"
                         })
 
+
                     # Save checkpoint at each batch
+                        
+                    os.makedirs(os.path.dirname(checkpoint_file), exist_ok=True)
                     with open(checkpoint_file, "w") as f:
                         json.dump(generation_metadata, f, indent=4)
 
