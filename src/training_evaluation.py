@@ -204,7 +204,9 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     )
 
     # Train baseline
-    model_baseline = create_model(37, device)
+    num_classes = len(dataset_train.classes)
+
+    model_baseline = create_model(num_classes, device)
     model_baseline = train_model(model_baseline, train_loader_baseline, device, epochs)
 
     acc_baseline, report_baseline = evaluate_model(model_baseline, test_loader, device)
@@ -212,7 +214,7 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     print("Baseline Accuracy:", acc_baseline)
 
     # Train augmented
-    model_augmented = create_model(37, device)
+    model_augmented = create_model(num_classes, device)
     model_augmented = train_model(model_augmented, train_loader_augmented, device, epochs)
     
     acc_augmented, report_augmented = evaluate_model(model_augmented, test_loader, device)
@@ -239,7 +241,8 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
             "test_size": len(dataset_test),
             "epochs": epochs,
             "batch_size": batch_size,
-            "model": "ResNet18"
+            "model": "ResNet18",
+            "random_seed": 42
         }
     }
 
