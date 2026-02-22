@@ -97,6 +97,7 @@ class SyntheticImageGenerator:
             selected_data,
             output_dir,
             checkpoint_file,
+            final_metadata_file=None,
             batch_size=4
     ):
                 
@@ -164,6 +165,12 @@ class SyntheticImageGenerator:
                         json.dump(generation_metadata, f, indent=4)
 
                     torch.cuda.empty_cache()
+
+            # save final metadata
+            if final_metadata_file is not None:
+                os.makedirs(os.path.dirname(final_metadata_file), exist_ok=True)
+                with open(final_metadata_file, "w") as f:
+                    json.dump(generation_metadata, f, indent=4)   
                 
             return generation_metadata
                     
