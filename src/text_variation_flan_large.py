@@ -59,23 +59,36 @@ def generate_variations(prompt, tokenizer, model, device):
   return decoded
 
 
-def run_text_variation(caption_file, max_items=10):
+def run_text_variation(caption_file, output_file, max_items=None):
 
     with open(caption_file, "r") as f:
         captions_dict = json.load(f)
 
-    items = list(captions_dict.items())[:max_items]
+    items = list(captions_dict.items())
+
+    # If max_items is set, limit the dataset
+    if max_items is not None:
+        items = items[:max_items]
 
     tokenizer, model, device = load_flan_large_model()
+
+    results = {}
 
     for img, data in tqdm(items):
 
         captions = list(set(data["captions"])) # remove duplicates
+
+        results[img] = []
 
         for caption in captions:
 
             prompt = build_prompt(caption)
             generated = generate_variations(prompt, tokenizer, model, device)
 
-            print("\nOriginal:", caption)
-            print("Generated:", generated)
+            results[img].append({
+                "Original": caption,
+                "Generated": generated})
+            
+            
+    with open(output_file, "w") as f:
+      json.dump(results, f, indent=2)
