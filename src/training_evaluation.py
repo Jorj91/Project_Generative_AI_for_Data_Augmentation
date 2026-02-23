@@ -255,25 +255,29 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     # 1. Train baseline
     num_classes = len(dataset_train_no_aug.classes)
 
+    
+    print("\n===== Training Baseline =====")
     model_baseline = create_model(num_classes, device)
     model_baseline = train_model(model_baseline, train_loader_baseline, device, epochs)
 
     acc_baseline, report_baseline = evaluate_model(model_baseline, test_loader, device)
-    print("Baseline Accuracy:", acc_baseline)
+    '''print("Baseline Accuracy:", acc_baseline)'''
 
     # 2. Train classical Augmentation
+    print("\n===== Training Classical Augmentation =====")
     model_classical = create_model(num_classes, device)
     model_classical = train_model(model_classical, train_loader_classical, device, epochs)
 
     acc_classical, report_classical = evaluate_model(model_classical, test_loader, device)
-    print("Classical Augmentation Accuracy:", acc_classical)
+    '''print("Classical Augmentation Accuracy:", acc_classical)'''
 
     # 3. Train Synthetic + Classical Augmentation
+    print("\n===== Training Synthetic + Classical =====")
     model_synth_classical = create_model(num_classes, device)
     model_synth_classical = train_model(model_synth_classical, train_loader_synth_classical, device, epochs)
 
     acc_synth_classical, report_synth_classical = evaluate_model(model_synth_classical, test_loader, device)
-    print("Synthetic + Classical Augmentation Accuracy:", acc_synth_classical)
+    '''print("Synthetic + Classical Augmentation Accuracy:", acc_synth_classical)'''
 
 
     # save results
