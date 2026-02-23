@@ -1,0 +1,327 @@
+import os
+import json
+import numpy as np
+from PIL import Image
+from tqdm import tqdm
+
+import torch
+import torchvision
+import torchvision.transforms as transforms
+import torchvision.models as models
+
+from torch.utils.data import DataLoader, Subset, ConcatDataset
+from sklearn.metrics import classification_report, accuracy_score
+
+
+# synthetic dataset
+
+class SyntheticDataset(torch.utils.data.Dataset):
+    def __init__(self, metadata, class_to_idx, transform=None):
+        self.samples = []
+        self.transform = transform
+        self.class_to_idx = class_to_idx
+
+        for idx in metadata:
+            for item in metadata[idx]:
+                path = item["image_path"]
+                class_name = item["class_name"]
+
+                if class_name in class_to_idx:
+                    label = class_to_idx[class_name]
+                    self.samples.append((path, label))
+
+    def __len__(self):
+        return len(self.samples)
+
+    def __getitem__(self, idx):
+        path, label = self.samples[idx]
+        image = Image.open(path).convert("RGB")
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label
+    
+
+# Model
+
+def create_model(num_classes, device):
+    model = models.resnet18(weights="IMAGENET1K_V1")
+    model.fc = torch.nn.Linear(model.fc.in_features, num_classes)
+    return model.to(device)
+
+
+# Training
+
+def train_model(model, train_loader, device, epochs=5):
+
+    criterion = torch.nn.CrossEntropyLoss()
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-4)
+
+    model.train()
+
+    for epoch in range(epochs):
+        running_loss = 0
+
+        for images, labels in tqdm(train_loader):
+            images = images.to(device)
+            labels = labels.to(device)
+
+            optimizer.zero_grad()
+            outputs = model(images)
+            loss = criterion(outputs, labels)
+            loss.backward()
+            optimizer.step()
+
+            running_loss += loss.item()
+
+        print(f"Epoch {epoch+1}/{epochs}, Loss: {running_loss/len(train_loader):.4f}")
+
+    return model
+
+
+# Evaluation
+
+def evaluate_model(model, loader, device):
+
+    model.eval()
+    all_preds = []
+    all_labels = []
+
+    with torch.no_grad():
+        for images, labels in loader:
+            images = images.to(device)
+            outputs = model(images)
+            preds = torch.argmax(outputs, dim=1)
+
+            all_preds.extend(preds.cpu().numpy())
+            all_labels.extend(labels.numpy())
+
+    accuracy = accuracy_score(all_labels, all_preds)
+    report_dict = classification_report(all_labels, all_preds, output_dict=True)
+
+    return accuracy, report_dict
+
+# Main Training Pipeline
+
+def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
+
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    # Transforms
+
+    '''transform_train = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        )
+    ])'''
+
+    transform_train_no_aug = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        )
+    ])
+
+
+    transform_train_aug = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2,
+        hue=0.05
+    ),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+        )
+    ])
+
+
+    transform_test = transforms.Compose([
+        transforms.Resize((224, 224)),
+        transforms.ToTensor(),
+        transforms.Normalize(
+            mean=[0.485, 0.456, 0.406],
+            std=[0.229, 0.224, 0.225]
+        )
+    ])
+
+
+    # Load datasets
+
+    dataset_train_no_aug = torchvision.datasets.OxfordIIITPet(
+        root=os.path.join(PROJECT_ROOT, "data", "raw"),
+        split="trainval",
+        transform=transform_train_no_aug,
+        download=True
+    )
+
+    dataset_train_aug = torchvision.datasets.OxfordIIITPet(
+    root=os.path.join(PROJECT_ROOT, "data", "raw"),
+    split="trainval",
+    transform=transform_train_aug,
+    download=True
+    )
+
+    dataset_test = torchvision.datasets.OxfordIIITPet(
+        root=os.path.join(PROJECT_ROOT, "data", "raw"),
+        split="test",
+        transform=transform_test,
+        download=True
+    )
+
+    train_small_idx = np.load(
+        os.path.join(PROJECT_ROOT, "data", "splits", "train_small_indices.npy")
+    )
+
+    dataset_train_small_no_aug = Subset(dataset_train_no_aug, train_small_idx)
+    dataset_train_small_aug = Subset(dataset_train_aug, train_small_idx)
+
+    
+    # Synthetic data
+
+    metadata_path = os.path.join(
+        PROJECT_ROOT,
+        "data",
+        "synthetic",
+        "generation_metadata_final.json"
+    )
+
+    with open(metadata_path, "r") as f:
+        generation_metadata = json.load(f)
+
+    synthetic_dataset = SyntheticDataset(
+        generation_metadata,
+        dataset_train_aug.class_to_idx,
+        transform=transform_train_aug
+    )
+
+    # Define 3 training sets: Baseline, Classical augmentation, Synthetic + Classical Augmentation
+
+    train_baseline = dataset_train_small_no_aug
+
+    train_classical = dataset_train_small_aug
+
+    train_synthetic_plus_classical = ConcatDataset([
+        dataset_train_small_aug,
+        synthetic_dataset
+    ])  
+
+
+    # Loaders
+    train_loader_baseline = DataLoader(
+        train_baseline,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=4
+    )
+
+    train_loader_classical = DataLoader(
+        train_classical,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=4
+    )
+
+    train_loader_synth_classical = DataLoader(
+        train_synthetic_plus_classical,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=4
+    )
+
+    test_loader = DataLoader(
+        dataset_test,
+        batch_size=batch_size,
+        shuffle=False,
+        num_workers=4
+    )
+
+    # 1. Train baseline
+    num_classes = len(dataset_train_no_aug.classes)
+
+    model_baseline = create_model(num_classes, device)
+    model_baseline = train_model(model_baseline, train_loader_baseline, device, epochs)
+
+    acc_baseline, report_baseline = evaluate_model(model_baseline, test_loader, device)
+    print("Baseline Accuracy:", acc_baseline)
+
+    # 2. Train classical Augmentation
+    model_classical = create_model(num_classes, device)
+    model_classical = train_model(model_classical, train_loader_classical, device, epochs)
+
+    acc_classical, report_classical = evaluate_model(model_classical, test_loader, device)
+    print("Classical Augmentation Accuracy:", acc_classical)
+
+    # 3. Train Synthetic + Classical Augmentation
+    model_synth_classical = create_model(num_classes, device)
+    model_synth_classical = train_model(model_synth_classical, train_loader_synth_classical, device, epochs)
+
+    acc_synth_classical, report_synth_classical = evaluate_model(model_synth_classical, test_loader, device)
+    print("Synthetic + Classical Augmentation Accuracy:", acc_synth_classical)
+
+
+    # save results
+    MODEL_DIR = os.path.join(PROJECT_ROOT, "models")
+    os.makedirs(MODEL_DIR, exist_ok=True)
+
+    # save metrics + experiment info
+
+    results = {
+        "baseline": {
+            "accuracy": acc_baseline,
+            "report": report_baseline
+        },
+        "classical_only": {
+            "accuracy": acc_classical,
+            "report": report_classical
+        },
+        "synthetic_plus_classical": {
+            "accuracy": acc_synth_classical,
+            "report": report_synth_classical
+        },
+        "experiment_info": {
+            "train_size_real": len(dataset_train_small_no_aug),
+            "train_size_classical": len(dataset_train_small_aug),
+            "train_size_synthetic_plus_classical": len(synthetic_dataset),
+            "test_size": len(dataset_test),
+            "epochs": epochs,
+            "batch_size": batch_size,
+            "model": "ResNet18",
+            "random_seed": 42
+        }
+    }
+
+    with open(os.path.join(MODEL_DIR, "evaluation_results.json"), "w") as f:
+        json.dump(results, f, indent=4)
+
+    # save 3 models weights
+    torch.save(
+        model_baseline.state_dict(),
+        os.path.join(MODEL_DIR, "resnet18_baseline.pth")
+    )
+
+    torch.save(
+    model_classical.state_dict(),
+    os.path.join(MODEL_DIR, "resnet18_classical.pth")
+    )
+
+    torch.save(
+        model_synth_classical.state_dict(),
+        os.path.join(MODEL_DIR, "resnet18_synth_classical.pth")
+    )
+
+    return results
+
+
