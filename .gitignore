@@ -1,6 +1,7 @@
 data/raw/
 __pycache__/
-*.pth
+models/*.pth
+data/synthetic/images/
 *.pt
 *.log
 *.pyc
