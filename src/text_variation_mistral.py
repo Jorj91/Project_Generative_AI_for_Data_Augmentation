@@ -87,10 +87,6 @@ def generate_variations(prompt, tokenizer, model):
 # main pipeline function
 
 def run_text_variation(caption_file, output_file, max_items=None):
-
-    if os.path.exists(output_file):
-        print("Text variation already exists. Skipping")
-        return
     
     with open(caption_file, "r") as f:
         captions_dict = json.load(f)

@@ -1,5 +1,6 @@
 import json
 import os
+import shutil
 import numpy as np
 from tqdm import tqdm
 import torch
@@ -66,23 +67,44 @@ class SyntheticImageGenerator:
     def __init__(
         self,
         model_name = "runwayml/stable-diffusion-v1-5",
-        device = None
+        device = None,
+        seed=42
     ):
-        self.device = device or (
-            "cuda" if torch.cuda.is_available() else "cpu"
-                                 )
+        self.device = device or ("cuda" if torch.cuda.is_available() else "cpu")
+
+        # reproducibility
+        self.seed = seed
+
+        torch.manual_seed(seed)
+        if torch.cuda.is_available():
+            torch.cuda.manual_seed_all(seed)
+
+        torch.backends.cudnn.deterministic = True
+        torch.backends.cudnn.benchmark = False
+
+        self.generator = torch.Generator(device=self.device).manual_seed(seed)
         
         self.pipe = StableDiffusionPipeline.from_pretrained(
             model_name,
-            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32
-)
+            torch_dtype=torch.float16 if self.device == "cuda" else torch.float32)
         
         self.pipe.scheduler = DPMSolverMultistepScheduler.from_config(self.pipe.scheduler.config)
-        self.pipe = self.pipe.to(self.device)
 
-        self.pipe.enable_attention_slicing()
+        # optimize GPU memory for colab
+        if self.device == "cuda":
+            try:
+                self.pipe.enable_xformers_memory_efficient_attention()
+            except Exception:
+                print("xformers not available. Continuing without it.")
+
+            self.pipe.enable_attention_slicing()
+            self.pipe.enable_vae_slicing()
+            self.pipe.enable_vae_tiling()
+            self.pipe.enable_model_cpu_offload()
+        else:
+            self.pipe = self.pipe.to(self.device)
+
         self.pipe.safety_checker = None
-        torch.backends.cuda.matmul.allow_tf32 = True
 
     def build_prompt(self, caption, class_name):
         prompt = (
@@ -100,27 +122,27 @@ class SyntheticImageGenerator:
             final_metadata_file=None,
             batch_size=4
     ):
+            # start clean
+            if os.path.exists(output_dir):
+                shutil.rmtree(output_dir)  # delete entire image folder
+
+            if os.path.exists(checkpoint_file):
+                os.remove(checkpoint_file)  # delete checkpoint
+
+            if final_metadata_file and os.path.exists(final_metadata_file):
+                os.remove(final_metadata_file)  # delete final metadata
                 
             os.makedirs(output_dir, exist_ok=True)
 
-            if os.path.exists(checkpoint_file):
-                with open(checkpoint_file, "r") as f:
-                    generation_metadata = json.load(f)
-
-            else:
-                generation_metadata = {}
+            # start fresh metadata
+            generation_metadata = {}
 
             for idx, data in tqdm(selected_data.items()):
 
                 class_name = data["class_name"]
                 captions = data["selected_generated_captions"]
 
-                if idx not in generation_metadata:
-                    generation_metadata[idx] = []
-                
-                # Skip already processed captions
-                already_done = len(generation_metadata[idx])
-                captions = captions[already_done:]
+                generation_metadata[idx] = []
 
                 # batch loop
                 for batch_start in range(0, len(captions), batch_size):
@@ -137,14 +159,15 @@ class SyntheticImageGenerator:
                         num_inference_steps=20,
                         guidance_scale=7.5,
                         height=512,
-                        width=512
+                        width=512,
+                        generator=self.generator
                     ).images
 
                     # Save each image from batch
 
                     for i, image in enumerate(images):
 
-                        global_index = already_done + batch_start + i
+                        global_index = batch_start + i
                         image_filename = f"{idx}_{global_index}.png"
                         image_path = os.path.join(output_dir, image_filename)
 
@@ -158,7 +181,7 @@ class SyntheticImageGenerator:
                         })
 
 
-                    # Save checkpoint at each batch
+                    # Save checkpoint at each batch (overwriting)
                         
                     os.makedirs(os.path.dirname(checkpoint_file), exist_ok=True)
                     with open(checkpoint_file, "w") as f:
@@ -166,7 +189,7 @@ class SyntheticImageGenerator:
 
                     torch.cuda.empty_cache()
 
-            # save final metadata
+            # save final metadata (overwriting)
             if final_metadata_file is not None:
                 os.makedirs(os.path.dirname(final_metadata_file), exist_ok=True)
                 with open(final_metadata_file, "w") as f:

@@ -1,4 +1,4 @@
-torch
+torch>=2.0
 torchvision
 sentence-transformers
 transformers
@@ -6,6 +6,7 @@ diffusers
 accelerate
 sentencepiece
 scikit-learn
+xformers>=0.0.22
 matplotlib
 numpy
 pillow
