@@ -106,19 +106,51 @@ def evaluate_model(model, loader, device):
 
 def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
 
+    # reproducibility
+    import random
+
+    torch.manual_seed(42)
+    np.random.seed(42)
+    random.seed(42)
+
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(42)
+
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+    # device
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # Transforms
 
-    transform_train = transforms.Compose([
+    transform_train_no_aug = transforms.Compose([
         transforms.Resize((224, 224)),
-        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize(
             mean=[0.485, 0.456, 0.406],
             std=[0.229, 0.224, 0.225]
         )
     ])
+
+
+    transform_train_aug = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomRotation(10),
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2,
+        hue=0.05
+    ),
+    transforms.ToTensor(),
+    transforms.Normalize(
+        mean=[0.485, 0.456, 0.406],
+        std=[0.229, 0.224, 0.225]
+        )
+    ])
+
 
     transform_test = transforms.Compose([
         transforms.Resize((224, 224)),
@@ -132,11 +164,18 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
 
     # Load datasets
 
-    dataset_train = torchvision.datasets.OxfordIIITPet(
+    dataset_train_no_aug = torchvision.datasets.OxfordIIITPet(
         root=os.path.join(PROJECT_ROOT, "data", "raw"),
         split="trainval",
-        transform=transform_train,
+        transform=transform_train_no_aug,
         download=True
+    )
+
+    dataset_train_aug = torchvision.datasets.OxfordIIITPet(
+    root=os.path.join(PROJECT_ROOT, "data", "raw"),
+    split="trainval",
+    transform=transform_train_aug,
+    download=True
     )
 
     dataset_test = torchvision.datasets.OxfordIIITPet(
@@ -150,7 +189,8 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
         os.path.join(PROJECT_ROOT, "data", "splits", "train_small_indices.npy")
     )
 
-    dataset_train_small = Subset(dataset_train, train_small_idx)
+    dataset_train_small_no_aug = Subset(dataset_train_no_aug, train_small_idx)
+    dataset_train_small_aug = Subset(dataset_train_aug, train_small_idx)
 
     
     # Synthetic data
@@ -167,16 +207,18 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
 
     synthetic_dataset = SyntheticDataset(
         generation_metadata,
-        dataset_train.class_to_idx,
-        transform=transform_train
+        dataset_train_aug.class_to_idx,
+        transform=transform_train_aug
     )
 
-    # Baseline vs Augmented
+    # Define 3 training sets: Baseline, Classical augmentation, Synthetic + Classical Augmentation
 
-    train_baseline = dataset_train_small
+    train_baseline = dataset_train_small_no_aug
 
-    train_augmented = ConcatDataset([
-        dataset_train_small,
+    train_classical = dataset_train_small_aug
+
+    train_synthetic_plus_classical = ConcatDataset([
+        dataset_train_small_aug,
         synthetic_dataset
     ])  
 
@@ -189,8 +231,15 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
         num_workers=4
     )
 
-    train_loader_augmented = DataLoader(
-        train_augmented,
+    train_loader_classical = DataLoader(
+        train_classical,
+        batch_size=batch_size,
+        shuffle=True,
+        num_workers=4
+    )
+
+    train_loader_synth_classical = DataLoader(
+        train_synthetic_plus_classical,
         batch_size=batch_size,
         shuffle=True,
         num_workers=4
@@ -203,41 +252,53 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
         num_workers=4
     )
 
-    # Train baseline
-    num_classes = len(dataset_train.classes)
+    # 1. Train baseline
+    num_classes = len(dataset_train_no_aug.classes)
 
     model_baseline = create_model(num_classes, device)
     model_baseline = train_model(model_baseline, train_loader_baseline, device, epochs)
 
     acc_baseline, report_baseline = evaluate_model(model_baseline, test_loader, device)
-
     print("Baseline Accuracy:", acc_baseline)
 
-    # Train augmented
-    model_augmented = create_model(num_classes, device)
-    model_augmented = train_model(model_augmented, train_loader_augmented, device, epochs)
-    
-    acc_augmented, report_augmented = evaluate_model(model_augmented, test_loader, device)
+    # 2. Train classical Augmentation
+    model_classical = create_model(num_classes, device)
+    model_classical = train_model(model_classical, train_loader_classical, device, epochs)
 
-    print("Augmented Accuracy:", acc_augmented)
+    acc_classical, report_classical = evaluate_model(model_classical, test_loader, device)
+    print("Classical Augmentation Accuracy:", acc_classical)
+
+    # 3. Train Synthetic + Classical Augmentation
+    model_synth_classical = create_model(num_classes, device)
+    model_synth_classical = train_model(model_synth_classical, train_loader_synth_classical, device, epochs)
+
+    acc_synth_classical, report_synth_classical = evaluate_model(model_synth_classical, test_loader, device)
+    print("Synthetic + Classical Augmentation Accuracy:", acc_synth_classical)
+
 
     # save results
     MODEL_DIR = os.path.join(PROJECT_ROOT, "models")
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     # save metrics + experiment info
+
     results = {
         "baseline": {
             "accuracy": acc_baseline,
             "report": report_baseline
         },
-        "augmented": {
-            "accuracy": acc_augmented,
-            "report": report_augmented
+        "classical_only": {
+            "accuracy": acc_classical,
+            "report": report_classical
+        },
+        "synthetic_plus_classical": {
+            "accuracy": acc_synth_classical,
+            "report": report_synth_classical
         },
         "experiment_info": {
-            "train_size_real": len(train_baseline),
-            "train_size_synthetic": len(synthetic_dataset),
+            "train_size_real_small": len(dataset_train_small_no_aug),
+            "train_size_classical": len(dataset_train_small_aug),
+            "train_size_synthetic_plus_classical": len(synthetic_dataset),
             "test_size": len(dataset_test),
             "epochs": epochs,
             "batch_size": batch_size,
@@ -249,15 +310,20 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     with open(os.path.join(MODEL_DIR, "evaluation_results.json"), "w") as f:
         json.dump(results, f, indent=4)
 
-    # save models weights
+    # save 3 models weights
     torch.save(
         model_baseline.state_dict(),
         os.path.join(MODEL_DIR, "resnet18_baseline.pth")
     )
 
     torch.save(
-        model_augmented.state_dict(),
-        os.path.join(MODEL_DIR, "resnet18_augmented.pth")
+    model_classical.state_dict(),
+    os.path.join(MODEL_DIR, "resnet18_classical.pth")
+    )
+
+    torch.save(
+        model_synth_classical.state_dict(),
+        os.path.join(MODEL_DIR, "resnet18_synth_classical.pth")
     )
 
     return results
