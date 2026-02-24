@@ -1,3 +1,16 @@
+"""
+Text Variation Module — FLAN-T5-Large
+
+This module generates paraphrased versions of captions using a large instruction-tuned language model.
+
+Goal:
+- Preserve semantic meaning
+- Increase lexical diversity
+- Generate multiple controlled variations per caption
+
+This model is evaluated as a candidate for data augmentation.
+"""
+
 import os
 import json
 import torch
@@ -7,6 +20,13 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 def load_flan_large_model():
 
+    """
+    Load FLAN-T5-Large model and tokenizer.
+
+    Returns:
+        tokenizer, model, device
+    """
+
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
   model_name = "google/flan-t5-large"
@@ -15,16 +35,32 @@ def load_flan_large_model():
 
   model = T5ForConditionalGeneration.from_pretrained(model_name).to(device)
 
-  model.eval()
+  model.eval() # Inference mode
 
   return tokenizer, model, device
 
 
 def build_prompt(caption):
+    
+    """
+    Build rewriting instruction prompt.
+
+    The instruction requests three alternative phrasings to encourage lexical variation.
+    """
+
   return f"Rewrite this caption in three different ways: {caption}"
 
 
 def generate_variations(prompt, tokenizer, model, device):
+
+    """
+    Generate multiple variations from a prompt.
+
+    Strategy:
+    - Enable sampling for diversity
+    - Moderate temperature for controlled randomness
+    - Top-p nucleus sampling to avoid extreme outputs
+    """
 
   inputs = tokenizer(prompt, return_tensors = "pt", truncation=True).to(device)
 
@@ -44,9 +80,11 @@ def generate_variations(prompt, tokenizer, model, device):
                             # num_return_sequences=num_variations,
                             # early_stopping=True,
                             # trust_remote_code=True
+
+                            # Sampling-based decoding for diversity
                             do_sample=True,
-                            temperature=0.6,
-                            top_p=0.85,
+                            temperature=0.6, # moderate randomness
+                            top_p=0.85, # nucleus sampling
                             num_return_sequences=3,
                             pad_token_id=tokenizer.eos_token_id
                             )
@@ -58,9 +96,14 @@ def generate_variations(prompt, tokenizer, model, device):
 
   return decoded
 
+# main execution function
 
 def run_text_variation(caption_file, output_file, max_items=None):
+    """
+    Generate text variations for all captions in dataset.
+    """
 
+    # load oroginal captions
     with open(caption_file, "r") as f:
         captions_dict = json.load(f)
 
@@ -76,7 +119,7 @@ def run_text_variation(caption_file, output_file, max_items=None):
 
     for img, data in tqdm(items):
 
-        captions = list(set(data["captions"])) # remove duplicates
+        captions = list(set(data["captions"])) # remove duplicate captions
 
         results[img] = []
 
@@ -89,6 +132,6 @@ def run_text_variation(caption_file, output_file, max_items=None):
                 "Original": caption,
                 "Generated": generated})
             
-            
+    # save results      
     with open(output_file, "w") as f:
       json.dump(results, f, indent=2)
