@@ -20,12 +20,12 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 def load_flan_large_model():
 
-    """
-    Load FLAN-T5-Large model and tokenizer.
+  """
+  Load FLAN-T5-Large model and tokenizer.
 
-    Returns:
-        tokenizer, model, device
-    """
+  Returns:
+      tokenizer, model, device
+  """
 
   device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -42,25 +42,25 @@ def load_flan_large_model():
 
 def build_prompt(caption):
     
-    """
-    Build rewriting instruction prompt.
+  """
+  Build rewriting instruction prompt.
 
-    The instruction requests three alternative phrasings to encourage lexical variation.
-    """
+  The instruction requests three alternative phrasings to encourage lexical variation.
+  """
 
   return f"Rewrite this caption in three different ways: {caption}"
 
 
 def generate_variations(prompt, tokenizer, model, device):
 
-    """
-    Generate multiple variations from a prompt.
+  """
+  Generate multiple variations from a prompt.
 
-    Strategy:
-    - Enable sampling for diversity
-    - Moderate temperature for controlled randomness
-    - Top-p nucleus sampling to avoid extreme outputs
-    """
+  Strategy:
+  - Enable sampling for diversity
+  - Moderate temperature for controlled randomness
+  - Top-p nucleus sampling to avoid extreme outputs
+  """
 
   inputs = tokenizer(prompt, return_tensors = "pt", truncation=True).to(device)
 
