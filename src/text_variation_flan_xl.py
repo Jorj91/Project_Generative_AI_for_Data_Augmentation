@@ -1,3 +1,19 @@
+"""
+Text Variation Module — FLAN-T5-XL
+
+This module generates paraphrased captions using a larger instruction-tuned language model (~3B parameters).
+
+Goal:
+- Improve semantic faithfulness
+- Reduce hallucinations
+- Evaluate quality vs diversity trade-off
+
+Decoding strategy:
+- Beam search (deterministic)
+- Prioritizes stable outputs over diversity
+"""
+
+
 import os
 import json
 import torch
@@ -6,6 +22,14 @@ from transformers import T5Tokenizer, T5ForConditionalGeneration
 
 def load_flan_xl_model():
 
+    """
+    Load FLAN-T5-XL model with memory-efficient configuration.
+
+    Features:
+    - float16 on GPU to reduce memory usage
+    - device_map="auto" for automatic GPU allocation
+    - low_cpu_mem_usage for optimized loading
+    """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model_name = "google/flan-t5-xl"
@@ -19,16 +43,31 @@ def load_flan_xl_model():
         low_cpu_mem_usage=True
     )
 
-    model.eval()
+    model.eval() #infrence mode
 
     return tokenizer, model, device
 
 
 def build_prompt(caption):
+
+    """
+    Build rewriting instruction prompt.
+
+    The instruction requests three alternative phrasings.
+    """
     return f"Rewrite this caption in three different ways: {caption}"
 
 
 def generate_variations(prompt, tokenizer, model, device, num_variations=3):
+
+    """
+    Generate variations using beam search.
+
+    Strategy:
+    - Deterministic decoding
+    - num_beams=5 improves quality
+    - No sampling (more stable, less diverse)
+    """
 
     inputs = tokenizer(
         prompt,
@@ -40,7 +79,7 @@ def generate_variations(prompt, tokenizer, model, device, num_variations=3):
         outputs = model.generate(
             **inputs,
             max_new_tokens=40,
-            num_beams=5,
+            num_beams=5, # beam search
             num_return_sequences=num_variations,
             early_stopping=True
         )
@@ -53,7 +92,17 @@ def generate_variations(prompt, tokenizer, model, device, num_variations=3):
     return decoded
 
 
+# main exe function
+
 def run_text_variation(caption_file, output_file, max_items=None):
+    """
+    Generate text variations for all captions in dataset.
+
+    Args:
+        caption_file (str): JSON file with original captions.
+        output_file (str): JSON file to store generated variations.
+        max_items (int or None): Optional subset size for debugging.
+    """
 
     with open(caption_file, "r") as f:
         captions_dict = json.load(f)
@@ -69,7 +118,7 @@ def run_text_variation(caption_file, output_file, max_items=None):
 
     for img, data in tqdm(items):
 
-        captions = list(set(data["captions"]))  # remove duplicates
+        captions = list(set(data["captions"]))  # remove duplicate captions
 
         results[img] = []
 
