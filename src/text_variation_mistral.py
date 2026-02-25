@@ -1,3 +1,14 @@
+"""
+Text Variation Module — Mistral-7B-Instruct
+
+This module generates caption paraphrases using a large instruction-tuned causal language model (7B parameters).
+
+Goal:
+- Maintain semantic alignment with original caption
+- Increase lexical diversity
+- Reduce hallucinations
+- Produce natural-sounding paraphrases
+"""
 import os
 import json
 import torch
@@ -11,11 +22,19 @@ from transformers import (
 # load model
 
 def load_mistral_model():
+    """
+    Load Mistral-7B-Instruct model with 4-bit quantization (memory startegy)
+
+    Benefits:
+    - Significant memory reduction
+    - Allows 7B model to run on Colab GPUs
+    - Maintains reasonable generation quality
+    """
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     model_name = "mistralai/Mistral-7B-Instruct-v0.2"
-
+    #4-bit quantization configuration
     bnb_config = BitsAndBytesConfig(
         load_in_4bit=True,
         bnb_4bit_compute_dtype=torch.float16,
@@ -38,6 +57,13 @@ def load_mistral_model():
 # prompt builder
 
 def build_prompt(caption):
+    """
+    Build instruction-style prompt for Mistral.
+
+    The model follows the instruction format: <s>[INST] ... [/INST]
+
+    We request two alternative rewriteswhile preserving meaning.
+    """
     return f"""<s>[INST]
 Rewrite the caption in two different ways.
 Keep the meaning the same.
@@ -48,6 +74,15 @@ Caption: {caption}
 # generation function
 
 def generate_variations(prompt, tokenizer, model):
+    """
+    Generate paraphrases using controlled sampling.
+
+    Strategy:
+    - Sampling enabled for diversity
+    - Moderate temperature
+    - Top-p nucleus sampling
+    - Extract assistant response after instruction block
+    """
 
     inputs = tokenizer(
         prompt,
@@ -62,12 +97,12 @@ def generate_variations(prompt, tokenizer, model):
             temperature=0.7,
             top_p=0.9,
             num_return_sequences=1,
-            pad_token_id=tokenizer.eos_token_id
+            pad_token_id=tokenizer.eos_token_id #use the end-of-sequence token as padding when needed
         )
 
     text = tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-    # Extract assistant response after [/INST]
+    # Extract assistant response after [/INST] toekn
     response = text.split("[/INST]")[-1].strip()
 
     # Split numbered lines into clean list
@@ -82,12 +117,24 @@ def generate_variations(prompt, tokenizer, model):
 
             variations.append(line)
 
-    return variations[:2]  # ensure exactly 2
+    return variations[:2]  # ensure exactly 2 variations
 
 # main pipeline function
 
 def run_text_variation(caption_file, output_file, max_items=None):
-    
+    """
+    Generate text variations for entire dataset.
+
+    Output structure:
+    {
+        image_id: {
+            "class_name": str,
+            "original_captions": [...],
+            "generated_captions": [...]
+        }
+    }
+    """
+    #load caption file
     with open(caption_file, "r") as f:
         captions_dict = json.load(f)
 
