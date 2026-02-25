@@ -11,7 +11,7 @@ import torchvision.transforms as transforms
 import torchvision.models as models
 
 from torch.utils.data import DataLoader, Subset, ConcatDataset
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 
 
 # Synthetic Dataset Wrapper
@@ -113,8 +113,9 @@ def evaluate_model(model, loader, device):
 
     accuracy = accuracy_score(all_labels, all_preds)
     report_dict = classification_report(all_labels, all_preds, output_dict=True)
+    cm = confusion_matrix(all_labels, all_preds)
 
-    return accuracy, report_dict
+    return accuracy, report_dict, cm
 
 # Main Training Pipeline
 # compares 3 training setups: baseline, classical augmentation only, and synthetic+classical augmentation
@@ -275,7 +276,7 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     model_baseline = create_model(num_classes, device)
     model_baseline = train_model(model_baseline, train_loader_baseline, device, epochs)
 
-    acc_baseline, report_baseline = evaluate_model(model_baseline, test_loader, device)
+    acc_baseline, report_baseline, cm_baseline = evaluate_model(model_baseline, test_loader, device)
     '''print("Baseline Accuracy:", acc_baseline)'''
 
     # 2. Train classical Augmentation
@@ -283,7 +284,7 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     model_classical = create_model(num_classes, device)
     model_classical = train_model(model_classical, train_loader_classical, device, epochs)
 
-    acc_classical, report_classical = evaluate_model(model_classical, test_loader, device)
+    acc_classical, report_classical, cm_classical = evaluate_model(model_classical, test_loader, device)
     '''print("Classical Augmentation Accuracy:", acc_classical)'''
 
     # 3. Train Synthetic + Classical Augmentation
@@ -291,16 +292,16 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
     model_synth_classical = create_model(num_classes, device)
     model_synth_classical = train_model(model_synth_classical, train_loader_synth_classical, device, epochs)
 
-    acc_synth_classical, report_synth_classical = evaluate_model(model_synth_classical, test_loader, device)
+    acc_synth_classical, report_synth_classical, cm_synth_classical = evaluate_model(model_synth_classical, test_loader, device)
     '''print("Synthetic + Classical Augmentation Accuracy:", acc_synth_classical)'''
 
 
-    # save results
+    # save results and models
     MODEL_DIR = os.path.join(PROJECT_ROOT, "models")
     os.makedirs(MODEL_DIR, exist_ok=True)
 
     # save Metrics and model weights
-    
+
     # Store:
     # - Accuracy
     # - Classification reports
@@ -312,20 +313,24 @@ def run_training(PROJECT_ROOT, epochs=5, batch_size=64):
         "class_names": class_names,
         "baseline": {
             "accuracy": acc_baseline,
-            "report": report_baseline
+            "report": report_baseline,
+            "confusion_matrix": cm_baseline.tolist()
         },
         "classical_only": {
             "accuracy": acc_classical,
-            "report": report_classical
+            "report": report_classical,
+            "confusion_matrix": cm_classical.tolist()
         },
         "synthetic_plus_classical": {
             "accuracy": acc_synth_classical,
-            "report": report_synth_classical
+            "report": report_synth_classical,
+            "confusion_matrix": cm_synth_classical.tolist()
         },
         "experiment_info": {
             "train_size_real_small": len(dataset_train_small_no_aug),
             "train_size_classical": len(dataset_train_small_aug),
-            "train_size_synthetic_plus_classical": len(synthetic_dataset),
+            "train_size_synthetic_only": len(synthetic_dataset),
+            "train_size_synthetic_plus_classical": len(train_synthetic_plus_classical),
             "test_size": len(dataset_test),
             "epochs": epochs,
             "batch_size": batch_size,
