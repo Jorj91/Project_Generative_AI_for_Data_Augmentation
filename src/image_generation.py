@@ -9,11 +9,22 @@ from sklearn.metrics.pairwise import cosine_similarity
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 
-# CAPTION SELECTION
+# CAPTION SELECTIONMODULE
+
+# This class selects the best generated captions per image using semantic similarity and diversity scoring
 
 class CaptionSelector:
 
     def __init__(self, embedding_model_name = "all-MiniLM-L6-v2"):
+        """
+        Initialize sentence embedding model.
+
+        all-MiniLM-L6-v2:
+        - Lightweight transformer model
+        - Produces semantically meaningful embeddings
+        - Efficient for cosine similarity comparisons
+        """
+
         self.model = SentenceTransformer(embedding_model_name)
 
     def select_top_captions(
@@ -22,10 +33,21 @@ class CaptionSelector:
             generated_captions, 
             top_k=2
     ):
+        
+        """
+        Select top-k generated captions based on weighted scoring.
+
+        Scoring:
+        - Reward high similarity to original captions
+        - Penalize similarity to other generated captions
+
+        Final Score:
+            0.7 * sim_to_original - 0.3 * sim_to_generated
+        """    
         if len(generated_captions) <= top_k:
             return generated_captions
         
-        # Encode captions
+        # Encode captions into embedings
         orig_embeddings = self.model.encode(original_captions)
         gen_embeddings = self.model.encode(generated_captions)
 
@@ -52,15 +74,21 @@ class CaptionSelector:
             # Final weighted score
             score = 0.7 * sim_to_orig - 0.3 * sim_to_gen
             scores.append(score)
-
+        # Select indices of top-k highest scores
         top_indices = np.argsort(scores)[-top_k:]
         selected = [generated_captions[i] for i in top_indices]
 
         return selected
 
 
-# STABLE DIFFUSION GENERATOR
-    
+# SYNTHETIC IMAGE GENERATION MODULE
+# Uses Stable Diffusion v1.5 to generate images From selected captions
+#
+# Key features:
+# - Reproducible seed control
+# - Memory optimization for Colab
+# - Batch processing
+# - Checkpoint saving
 
 class SyntheticImageGenerator:
 
@@ -107,6 +135,13 @@ class SyntheticImageGenerator:
         self.pipe.safety_checker = None
 
     def build_prompt(self, caption, class_name):
+        """
+        Construct Stable Diffusion prompt.
+
+        Prompts are anchored to:
+        - Realistic photographic style
+        - Explicit class name
+        """
         prompt = (
             f"A high-resolution realistic photograph of a {class_name}, "
             f"{caption.lower()}"
@@ -114,6 +149,8 @@ class SyntheticImageGenerator:
 
         return prompt
     
+
+    #core loop
     def generate_images(
             self,
             selected_data,
@@ -122,6 +159,15 @@ class SyntheticImageGenerator:
             final_metadata_file=None,
             batch_size=4
     ):
+            
+            """
+            Generate synthetic images from selected captions.
+
+            - Fresh output directory
+            - Batch generation
+            - Periodic checkpoint saving
+            - Metadata tracking
+            """
             # start clean
             if os.path.exists(output_dir):
                 shutil.rmtree(output_dir)  # delete entire image folder
