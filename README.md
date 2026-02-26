@@ -32,9 +32,14 @@ Synthetic + classical augmentation improves performance by ~2 percentage points 
 
 🚀 How to Run
 
-Open main.ipynb in Google Colab and execute sequentially.
+Open the notebook directly in Colab and execute sequentially:
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
+(https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main.ipynb)
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
+
+Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
 Main execution flags:
 RUN_CAPTIONING = True
