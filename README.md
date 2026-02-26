@@ -39,10 +39,15 @@ Open the notebook directly in Colab and execute sequentially:
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
 
-Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
-
 Main execution flags:
+
 RUN_CAPTIONING = True
+
 RUN_TEXT_VARIATION = True
+
 RUN_IMAGE_GENERATION = True
+
 RUN_TRAINING = True
+
+
+... Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
