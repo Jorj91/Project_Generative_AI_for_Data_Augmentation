@@ -134,3 +134,7 @@ def run_text_variation(caption_file, output_file, max_items=None):
     # final save
     with open(output_file, "w") as f:
         json.dump(results, f, indent=2)
+
+    print(f"\nSaved FLAN-T5-XL variations to: {output_file}")
+
+    return results

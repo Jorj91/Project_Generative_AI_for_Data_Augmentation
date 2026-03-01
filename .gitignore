@@ -10,3 +10,4 @@ data/text_variations/
 venv/
 venv312/
 notebooks/
+checks.py

@@ -179,6 +179,7 @@ def run_text_variation(caption_file, output_file, max_items=None):
 
     with open(output_file, "w") as f:
         json.dump(text_variations, f, indent=4)
-
         
-    print("Mistral text variations saved.")
+    print(f"Mistral text variations saved to: {output_file}")
+
+    return text_variations
