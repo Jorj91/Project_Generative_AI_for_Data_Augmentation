@@ -141,7 +141,8 @@ def run_captioning(
     processor,
     device,
     output_path,
-    save_every=20
+    save_every=20,
+    preview_samples=0
 ):
     
     """
@@ -186,6 +187,15 @@ def run_captioning(
             "class_name": class_name,
             "captions": captions
         }
+
+        # Preview first N samples
+        if preview_samples > 0 and i < preview_samples:
+            print(f"\nSample {i+1}")
+            print(f"Index: {original_idx}")
+            print(f"Class: {class_name}")
+            print("Caption 1:", captions[0])
+            print("Caption 2:", captions[1])
+            print("-" * 60)
         # periodic chekpoint saving (prevents data loss on runtime crash)
         if i % save_every == 0:
             with open(output_path, "w") as f:

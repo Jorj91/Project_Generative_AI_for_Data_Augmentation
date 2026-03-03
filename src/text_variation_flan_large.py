@@ -135,3 +135,7 @@ def run_text_variation(caption_file, output_file, max_items=None):
     # save results      
     with open(output_file, "w") as f:
       json.dump(results, f, indent=2)
+
+    print(f"\nSaved FLAN-Large variations to: {output_file}")
+
+    return results
