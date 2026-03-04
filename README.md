@@ -32,14 +32,20 @@ Synthetic + classical augmentation improves performance by ~2 percentage points 
 
 🚀 How to Run
 
-Open the notebook directly in Colab and execute sequentially:
+This project provides two notebook versions:
+
+1️⃣ Modularized Version (Recommended to understand the pipeline)
+
+This version uses the modular project structure (src/ modules) and reproduces the full pipeline.
+
+Open directly in Colab:
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
 (https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main.ipynb)
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
 
-Main execution flags:
+Run the notebook sequentially. Main execution flags:
 
 RUN_CAPTIONING = True
 
@@ -49,5 +55,17 @@ RUN_IMAGE_GENERATION = True
 
 RUN_TRAINING = True
 
+Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
-... Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
+
+2️⃣ Submission Version (All Code Integrated)
+
+This version contains all functions directly inside the notebook, allowing the reviewer to see the full pipeline and outputs without needing to clone modules or run heavy stages again.
+
+Open directly in Colab:
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
+(https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main_submission.ipynb)
+
+This notebook shows the final executed pipeline with outputs already saved.
+
+Or view the notebook on GitHub: [main.ipynb](./main_submission.ipynb)
