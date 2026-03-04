@@ -1,4 +1,5 @@
-###**Generative AI for Data Augmentation**
+#**Generative AI for Data Augmentation**
+
 <br>
 
 📌 ##**Overview**
@@ -9,7 +10,7 @@ Using the Oxford-IIIT Pet dataset (37 classes), we build a generative pipeline t
 
 Experiments are conducted on a 30% stratified training subset to simulate a limited-data scenario.
 
-# Dataset Sizes Used in Experiments
+### Dataset Sizes Used in Experiments
 
 | Dataset configuration | Number of training images |
 |---|---|
@@ -20,7 +21,9 @@ Experiments are conducted on a 30% stratified training subset to simulate a limi
 | Test set | **3,669** |
 
 Classical augmentation applies transformations during training (flips, rotations, color jitter) but does not increase the dataset size, while synthetic augmentation generates new images to expand the dataset.
+
 <br>
+
 🧠 ##**Pipeline**
 
 1. Caption Generation – BLIP-2
@@ -48,7 +51,9 @@ Synthetic + classical augmentation improves performance by ~1.04 percentage poin
 Due to the stochastic nature of deep learning training (weight initialization, data shuffling, and augmentation sampling), performance varied slightly across runs, with improvements occasionally reaching around +2 percentage points.
 
 This demonstrates that structured generative augmentation adds meaningful diversity beyond standard transformations.
+
 <br>
+
 🚀 ##**How to Run**
 
 This project provides two notebook versions:
