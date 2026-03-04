@@ -5,6 +5,7 @@ Generative AI for Data Augmentation
 This project evaluates whether text-driven synthetic data augmentation improves fine-grained image classification under limited data conditions.
 
 Using the Oxford-IIIT Pet dataset (37 classes), we build a generative pipeline that creates synthetic images from automatically generated and filtered captions, then measure the impact on classification performance.
+
 Experiments are conducted on a 30% stratified training subset to simulate a limited-data scenario.
 
 ### Dataset Sizes Used in Experiments
@@ -16,6 +17,8 @@ Experiments are conducted on a 30% stratified training subset to simulate a limi
 | Synthetic images only | **2,170** |
 | Synthetic + classical augmentation | **3,274** |
 | Test set | **3,669** |
+
+Classical augmentation applies transformations during training (flips, rotations, color jitter) but does not increase the dataset size, while synthetic augmentation generates new images to expand the dataset.
 
 🧠 Pipeline
 
@@ -38,13 +41,16 @@ Three configurations are compared:
 - Synthetic + classical augmentation
 
 Key insight:
-Synthetic + classical augmentation improves performance by ~2 percentage points over baseline, demonstrating that structured generative augmentation adds meaningful diversity beyond standard transformations.
+
+Synthetic + classical augmentation improves performance by ~1.04 percentage points over baseline. 
+Due to the stochastic nature of deep learning training (weight initialization, data shuffling, and augmentation sampling), performance varied slightly across runs, with improvements occasionally reaching around +2 percentage points.
+This demonstrates that structured generative augmentation adds meaningful diversity beyond standard transformations.
 
 🚀 How to Run
 
 This project provides two notebook versions:
 
-1️⃣ Modularized Version (Recommended to understand the pipeline)
+1️⃣ Modularized Version (Recommended)
 
 This version uses the modular project structure (src/ modules) and reproduces the full pipeline.
 
@@ -55,7 +61,9 @@ Open directly in Colab:
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
 
-Run the notebook sequentially. Main execution flags:
+Run the notebook sequentially. 
+
+Main execution flags:
 
 RUN_CAPTIONING = True
 
@@ -70,9 +78,10 @@ Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
 2️⃣ Submission Version (All Code Integrated)
 
-This version contains all functions directly inside the notebook, allowing the reviewer to see the full pipeline and outputs without needing to clone modules or run heavy stages again.
+This version contains all functions directly inside the notebook, allowing the reviewer to inspect the full pipeline and results without needing to clone modules or run computationally expensive stages again.
 
 Open directly in Colab:
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
 (https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main_submission.ipynb)
 
