@@ -1,0 +1,38 @@
+Class,baseline_F1,classical_only_F1,synthetic_plus_classical_F1
+Abyssinian,0.7283,0.7322,0.7708
+American Bulldog,0.7542,0.7154,0.6966
+American Pit Bull Terrier,0.5529,0.469,0.5909
+Basset Hound,0.7723,0.8095,0.7933
+Beagle,0.7389,0.7961,0.7459
+Bengal,0.6844,0.7207,0.7773
+Birman,0.8098,0.7857,0.7322
+Bombay,0.8601,0.9011,0.8511
+Boxer,0.7714,0.8095,0.8053
+British Shorthair,0.74,0.7746,0.8165
+Chihuahua,0.6923,0.6932,0.8152
+Egyptian Mau,0.8454,0.8612,0.9082
+English Cocker Spaniel,0.8324,0.7614,0.8491
+English Setter,0.8713,0.8718,0.9091
+German Shorthaired,0.891,0.8959,0.8622
+Great Pyrenees,0.932,0.9479,0.9394
+Havanese,0.839,0.8174,0.8444
+Japanese Chin,0.9543,0.9442,0.9744
+Keeshond,0.943,0.9641,0.9637
+Leonberger,0.9268,0.8966,0.8889
+Maine Coon,0.8229,0.7937,0.7459
+Miniature Pinscher,0.8913,0.8718,0.898
+Newfoundland,0.8976,0.8867,0.9171
+Persian,0.802,0.8021,0.796
+Pomeranian,0.899,0.9128,0.9286
+Pug,0.9381,0.9495,0.9485
+Ragdoll,0.7136,0.6935,0.6507
+Russian Blue,0.734,0.8195,0.7362
+Saint Bernard,0.8692,0.8844,0.8973
+Samoyed,0.96,0.9655,0.9469
+Scottish Terrier,0.8667,0.898,0.8889
+Shiba Inu,0.8767,0.8995,0.9406
+Siamese,0.8172,0.764,0.8077
+Sphynx,0.8821,0.8611,0.9091
+Staffordshire Bull Terrier,0.5786,0.5783,0.5674
+Wheaten Terrier,0.8272,0.8152,0.8411
+Yorkshire Terrier,0.9278,0.9333,0.9119
