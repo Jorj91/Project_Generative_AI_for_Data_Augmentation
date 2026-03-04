@@ -1,8 +1,8 @@
-#**Generative AI for Data Augmentation**
+# Generative AI for Data Augmentation
 
 <br>
 
-📌 ##**Overview**
+## 📌 Overview
 
 This project evaluates whether text-driven synthetic data augmentation improves fine-grained image classification under limited data conditions.
 
@@ -24,7 +24,7 @@ Classical augmentation applies transformations during training (flips, rotations
 
 <br>
 
-🧠 ##**Pipeline**
+## 🧠 Pipeline
 
 1. Caption Generation – BLIP-2
 
@@ -54,7 +54,7 @@ This demonstrates that structured generative augmentation adds meaningful divers
 
 <br>
 
-🚀 ##**How to Run**
+## 🚀 How to Run
 
 This project provides two notebook versions:
 
@@ -64,8 +64,7 @@ This version uses the modular project structure (src/ modules) and reproduces th
 
 Open directly in Colab:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
-(https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main.ipynb)
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
 
@@ -73,25 +72,23 @@ Run the notebook sequentially.
 
 Main execution flags:
 
+```
 RUN_CAPTIONING = True
-
 RUN_TEXT_VARIATION = True
-
 RUN_IMAGE_GENERATION = True
-
 RUN_TRAINING = True
+```
 
 Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
 
-2️⃣ <u>Submission Version (All Code Integrated))</u> 
+2️⃣ <u>Submission Version (All Code Integrated)</u> 
 
 This version contains all functions directly inside the notebook, allowing the reviewer to inspect the full pipeline and results without needing to clone modules or run computationally expensive stages again.
 
 Open directly in Colab:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)]
-(https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main_submission.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main_submission.ipynb)
 
 This notebook shows the final executed pipeline with outputs already saved.
 
