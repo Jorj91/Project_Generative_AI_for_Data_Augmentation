@@ -7,6 +7,16 @@ This project evaluates whether text-driven synthetic data augmentation improves 
 Using the Oxford-IIIT Pet dataset (37 classes), we build a generative pipeline that creates synthetic images from automatically generated and filtered captions, then measure the impact on classification performance.
 Experiments are conducted on a 30% stratified training subset to simulate a limited-data scenario.
 
+### Dataset Sizes Used in Experiments
+
+| Dataset configuration | Number of training images |
+|---|---|
+| Real images only (30% subset) | **1,104** |
+| Classical augmentation | **1,104** |
+| Synthetic images only | **2,170** |
+| Synthetic + classical augmentation | **3,274** |
+| Test set | **3,669** |
+
 🧠 Pipeline
 
 1. Caption Generation – BLIP-2
