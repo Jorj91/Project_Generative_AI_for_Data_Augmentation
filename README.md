@@ -68,4 +68,4 @@ Open directly in Colab:
 
 This notebook shows the final executed pipeline with outputs already saved.
 
-Or view the notebook on GitHub: [main.ipynb](./main_submission.ipynb)
+Or view the notebook on GitHub: [main_submission.ipynb](./main_submission.ipynb)
