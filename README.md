@@ -1,6 +1,6 @@
-Generative AI for Data Augmentation
+**Generative AI for Data Augmentation**
 
-📌 Overview
+📌 **Overview**
 
 This project evaluates whether text-driven synthetic data augmentation improves fine-grained image classification under limited data conditions.
 
@@ -20,7 +20,7 @@ Experiments are conducted on a 30% stratified training subset to simulate a limi
 
 Classical augmentation applies transformations during training (flips, rotations, color jitter) but does not increase the dataset size, while synthetic augmentation generates new images to expand the dataset.
 
-🧠 Pipeline
+🧠 **Pipeline**
 
 1. Caption Generation – BLIP-2
 
@@ -42,15 +42,17 @@ Three configurations are compared:
 
 Key insight:
 
-Synthetic + classical augmentation improves performance by ~1.04 percentage points over baseline. 
+Synthetic + classical augmentation improves performance by ~1.04 percentage points over baseline.
+
 Due to the stochastic nature of deep learning training (weight initialization, data shuffling, and augmentation sampling), performance varied slightly across runs, with improvements occasionally reaching around +2 percentage points.
+
 This demonstrates that structured generative augmentation adds meaningful diversity beyond standard transformations.
 
-🚀 How to Run
+🚀 **How to Run**
 
 This project provides two notebook versions:
 
-1️⃣ Modularized Version (Recommended)
+1️⃣ <u>Modularized Version (Recommended)</u>
 
 This version uses the modular project structure (src/ modules) and reproduces the full pipeline.
 
@@ -76,7 +78,7 @@ RUN_TRAINING = True
 Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
 
-2️⃣ Submission Version (All Code Integrated)
+2️⃣ <u>Submission Version (All Code Integrated))</u> 
 
 This version contains all functions directly inside the notebook, allowing the reviewer to inspect the full pipeline and results without needing to clone modules or run computationally expensive stages again.
 
