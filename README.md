@@ -58,7 +58,7 @@ This demonstrates that structured generative augmentation adds meaningful divers
 
 This project provides two notebook versions:
 
-1️⃣ <u>Modularized Version (Recommended)</u>
+1️⃣ **<u>Modularized Version (Recommended)</u>**
 
 This version uses the modular project structure (src/ modules) and reproduces the full pipeline.
 
@@ -82,7 +82,7 @@ RUN_TRAINING = True
 Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 
 
-2️⃣ <u>Submission Version (All Code Integrated)</u> 
+2️⃣ **<u>Submission Version (All Code Integrated)</u>**
 
 This version contains all functions directly inside the notebook, allowing the reviewer to inspect the full pipeline and results without needing to clone modules or run computationally expensive stages again.
 
