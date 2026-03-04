@@ -63,7 +63,6 @@ This project provides two notebook versions:
 This version uses the modular project structure (src/ modules) and reproduces the full pipeline.
 
 Open directly in Colab:
-
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main.ipynb)
 
 ⚠ Recommended: A100 GPU (image generation and LLM stages are memory intensive!)
@@ -87,7 +86,6 @@ Or view the notebook on GitHub: [main.ipynb](./main.ipynb)
 This version contains all functions directly inside the notebook, allowing the reviewer to inspect the full pipeline and results without needing to clone modules or run computationally expensive stages again.
 
 Open directly in Colab:
-
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Jorj91/Project_Generative_AI_for_Data_Augmentation/blob/main/main_submission.ipynb)
 
 This notebook shows the final executed pipeline with outputs already saved.
